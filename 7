@@ -1,0 +1,42 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+    int n;
+
+    cout << "Enter number of vertices: ";
+    cin >> n;
+
+    int graph[20][20];
+
+    cout << "Enter adjacency matrix:\n";
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            cin >> graph[i][j];
+        }
+    }
+
+    int indegree[20] = {0};
+    int outdegree[20] = {0};
+
+    // Calculate out-degree (row sum)
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            outdegree[i] += graph[i][j];
+        }
+    }
+
+    // Calculate in-degree (column sum)
+    for (int j = 0; j < n; j++) {
+        for (int i = 0; i < n; i++) {
+            indegree[j] += graph[i][j];
+        }
+    }
+
+    cout << "\nVertex\tIn-Degree\tOut-Degree\n";
+    for (int i = 0; i < n; i++) {
+        cout << i << "\t" << indegree[i] << "\t\t" << outdegree[i] << endl;
+    }
+
+    return 0;
+}
