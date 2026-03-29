@@ -1,0 +1,179 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+class SET {
+private:
+    vector<int> elements;
+
+public:
+    // Input set
+    void input() {
+        int n, val;
+        cout << "Enter number of elements: ";
+        cin >> n;
+        cout << "Enter elements:\n";
+        for (int i = 0; i < n; i++) {
+            cin >> val;
+            if (!isMember(val))  // avoid duplicates
+                elements.push_back(val);
+        }
+    }
+
+    // Display set
+    void display() const {
+        cout << "{ ";
+        for (int e : elements)
+            cout << e << " ";
+        cout << "}\n";
+    }
+
+    // a. is member
+    bool isMember(int x) const {
+        return find(elements.begin(), elements.end(), x) != elements.end();
+    }
+
+    // b. power set
+    void powerSet() const {
+        int n = elements.size();
+        int powerSize = 1 << n;
+
+        cout << "Power Set:\n";
+        for (int i = 0; i < powerSize; i++) {
+            cout << "{ ";
+            for (int j = 0; j < n; j++) {
+                if (i & (1 << j))
+                    cout << elements[j] << " ";
+            }
+            cout << "}\n";
+        }
+    }
+
+    // c. subset
+    bool isSubset(const SET &other) const {
+        for (int e : elements) {
+            if (!other.isMember(e))
+                return false;
+        }
+        return true;
+    }
+
+    // d. union
+    SET setUnion(const SET &other) const {
+        SET result = *this;
+        for (int e : other.elements) {
+            if (!result.isMember(e))
+                result.elements.push_back(e);
+        }
+        return result;
+    }
+
+    // d. intersection
+    SET intersection(const SET &other) const {
+        SET result;
+        for (int e : elements) {
+            if (other.isMember(e))
+                result.elements.push_back(e);
+        }
+        return result;
+    }
+
+    // e. complement (U - A)
+    SET complement(const SET &universal) const {
+        SET result;
+        for (int e : universal.elements) {
+            if (!isMember(e))
+                result.elements.push_back(e);
+        }
+        return result;
+    }
+
+    // f. set difference (A - B)
+    SET difference(const SET &other) const {
+        SET result;
+        for (int e : elements) {
+            if (!other.isMember(e))
+                result.elements.push_back(e);
+        }
+        return result;
+    }
+
+    // f. symmetric difference
+    SET symmetricDifference(const SET &other) const {
+        SET result;
+        for (int e : elements) {
+            if (!other.isMember(e))
+                result.elements.push_back(e);
+        }
+        for (int e : other.elements) {
+            if (!isMember(e))
+                result.elements.push_back(e);
+        }
+        return result;
+    }
+
+    // g. cartesian product
+    void cartesianProduct(const SET &other) const {
+        cout << "Cartesian Product:\n";
+        for (int a : elements) {
+            for (int b : other.elements) {
+                cout << "(" << a << ", " << b << ") ";
+            }
+            cout << endl;
+        }
+    }
+};
+
+int main() {
+    SET A, B, U;
+
+    cout << "\nEnter Set A:\n";
+    A.input();
+
+    cout << "\nEnter Set B:\n";
+    B.input();
+
+    cout << "\nEnter Universal Set:\n";
+    U.input();
+
+    cout << "\nSet A: "; A.display();
+    cout << "Set B: "; B.display();
+
+    // isMember
+    int x;
+    cout << "\nEnter element to check in Set A: ";
+    cin >> x;
+    cout << (A.isMember(x) ? "Present\n" : "Not Present\n");
+
+    // power set
+    A.powerSet();
+
+    // subset
+    cout << "\nA is subset of B: " << (A.isSubset(B) ? "Yes\n" : "No\n");
+
+    // union
+    SET uni = A.setUnion(B);
+    cout << "\nUnion: "; uni.display();
+
+    // intersection
+    SET inter = A.intersection(B);
+    cout << "Intersection: "; inter.display();
+
+    // complement
+    SET comp = A.complement(U);
+    cout << "Complement of A: "; comp.display();
+
+    // difference
+    SET diff = A.difference(B);
+    cout << "A - B: "; diff.display();
+
+    // symmetric difference
+    SET sym = A.symmetricDifference(B);
+    cout << "Symmetric Difference: "; sym.display();
+
+    // cartesian product
+    A.cartesianProduct(B);
+
+    return 0;
+}
