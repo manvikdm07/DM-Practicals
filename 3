@@ -1,0 +1,59 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+// Function to print a permutation
+void printPermutation(const vector<int>& perm) {
+    for (int x : perm)
+        cout << x << " ";
+    cout << endl;
+}
+
+// WITHOUT repetition (using backtracking)
+void permuteWithoutRepetition(vector<int>& arr, int l, int r) {
+    if (l == r) {
+        printPermutation(arr);
+        return;
+    }
+
+    for (int i = l; i <= r; i++) {
+        swap(arr[l], arr[i]);
+        permuteWithoutRepetition(arr, l + 1, r);
+        swap(arr[l], arr[i]); // backtrack
+    }
+}
+
+// WITH repetition
+void permuteWithRepetition(vector<int>& arr, vector<int>& current, int k) {
+    if ((int)current.size() == k) {
+        printPermutation(current);
+        return;
+    }
+
+    for (int i = 0; i < arr.size(); i++) {
+        current.push_back(arr[i]);
+        permuteWithRepetition(arr, current, k);
+        current.pop_back(); // backtrack
+    }
+}
+
+int main() {
+    int n;
+    cout << "Enter number of digits: ";
+    cin >> n;
+
+    vector<int> arr(n);
+    cout << "Enter digits:\n";
+    for (int i = 0; i < n; i++) {
+        cin >> arr[i];
+    }
+
+    cout << "\nPermutations WITHOUT repetition:\n";
+    permuteWithoutRepetition(arr, 0, n - 1);
+
+    cout << "\nPermutations WITH repetition:\n";
+    vector<int> current;
+    permuteWithRepetition(arr, current, n);
+
+    return 0;
+}
